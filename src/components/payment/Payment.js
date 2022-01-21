@@ -46,7 +46,7 @@ function Payment() {
     event.preventDefault();
     setProcessing(true);
 
-    const payload = await stripe
+    await stripe
       .confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -54,7 +54,6 @@ function Payment() {
       })
       .then(({ paymentIntent }) => {
         // paymentIntent = payment confirmation
-
         db.collection("users")
           .doc(user.uid)
           .collection("orders")
@@ -109,8 +108,9 @@ function Payment() {
             <h3>Review items and delivery</h3>
           </div>
           <div className="payment__items">
-            {basket.map((item) => (
+            {basket.map((item, index) => (
               <CheckoutProduct
+                key={index}
                 id={item.id}
                 title={item.title}
                 image={item.image}
